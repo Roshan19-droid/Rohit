@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> Tic-Tac-Toe</title>
+  <style>
+  p{
+    text-align:center;
+    color:red;
+    margin:3px;
+    font-size:50px;
+    background-color:yellow;
+  }
+.game-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+  background-color: #f0f0f0; /* Light gray background */
+}
+
+.game-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
+  border: 2px solid #ccc; /* Thicker border */
+  border-radius: 5px; /* Rounded corners */
+  background-color: #fff; /* White background */
+}
+
+.cell {
+  width: 100px;
+  height: 100px;
+  font-size: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: 1px solid black; /* Cell border */
+  background-color: #f0f0f0; /* Light gray background */
+  color:blue;
+}
+#resetButton {
+  /* Add your desired styles here */
+  padding: 10px 20px;
+  background-color: #ccc;
+  border: none;
+  cursor: pointer;
+  color:#B22222;
+  text-align:center;
+}
+.id1{
+  background-color:#0000FF;
+  color:#808080;
+}
+.button{
+  display: flex;
+  justify-content: center;
+}
+  .developer {
+    color: 	#9400D3;
+    font-size:20px;
+    background-color:transparent;
+  }
+
+.name {
+  color:red;
+  font-size:20px;
+  background-color:transparent;
+}
+  .last{
+    font-size:20px;
+    background-color:transparent;
+  }
+.div{
+  text-align:center;
+}
+  </style>
+</head>
+<body>
+  <p>Tic Tac Toe</p>
+  <div class="game-container">
+    <div class="game-board">
+      <div class="cell" data-cell-index="0"></div>
+      <div class="cell" data-cell-index="1"></div>
+      <div class="cell" data-cell-index="2"></div>
+      <div class="cell" data-cell-index="3"></div>
+      <div class="cell" data-cell-index="4"></div>
+      <div class="cell" data-cell-index="5"></div>
+      <div class="cell" data-cell-index="6"></div>
+      <div class="cell" data-cell-index="7"></div>
+      <div class="cell" data-cell-index="8"></div>
+    </div>
+  </div>
+  <p id="winner-message" class="id1"></p>
+  <div class="button">
+  <button id="resetButton">Reset</button>
+  </div>
+  <div class="div">
+  <h2>About Us</h2>
+  <span class="developer">Developer:</span>
+  <span class="name">Rohit Rana</span><br>
+  <span class="developer">Level:</span>
+  <span class="name">I.Sc 2 Year Programme at Studying</span><br>
+  <span class="developer">Caste:</span>
+  <span class="name">Tharu</span><br>
+    <p class="last">
+    #Tharu_ho_ni_feri<br>
+    #Proud_to_be_tharu
+  </p>
+  </div>
+  <script>
+    const cells = document.querySelectorAll('.cell');
+let currentPlayer = 'X';
+
+const winningCombinations = [
+  [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+  [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+  [0, 4, 8], [2, 4, 6]            // diagonals
+];
+
+function handleClick(event) {
+  const cell = event.target;
+  const cellIndex = cell.dataset.cellIndex;
+
+  if (cell.textContent === '') {
+    cell.textContent = currentPlayer;
+    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+    checkWinner();
+
+    if (currentPlayer === 'O') {
+      botMove();
+    }
+  }
+}
+
+function checkWinner() {
+  for (const combination of winningCombinations) {
+    const [a, b, c] = combination;
+    if (cells[a].textContent &&
+        cells[a].textContent === cells[b].textContent &&
+        cells[b].textContent === cells[c].textContent) {
+      const winnerMessage = document.getElementById('winner-message');
+      winnerMessage.textContent = `${cells[a].textContent} wins!`;
+      return;
+    }
+  }
+
+  const allCellsFilled = [...cells].every(cell => cell.textContent !== '');
+  if (allCellsFilled) {
+    const winnerMessage = document.getElementById('winner-message');
+    winnerMessage.textContent = "It's a tie!";
+  }
+}
+
+function botMove() {
+  const emptyCells = Array.from(cells).filter(cell => cell.textContent === '');
+  if (emptyCells.length > 0) {
+    const randomIndex = Math.floor(Math.random() * emptyCells.length);
+    const randomCell = emptyCells[randomIndex];
+    randomCell.textContent = 'O';
+    currentPlayer = 'X';
+  }
+}
+
+function resetGame() {
+  currentPlayer = 'X';
+  cells.forEach(cell => (cell.textContent = ''));
+  document.getElementById('winner-message').textContent = '';
+}
+
+cells.forEach(cell => cell.addEventListener('click', handleClick));
+
+const resetButton = document.getElementById('resetButton');
+resetButton.addEventListener('click', resetGame);
+
+</script>
+</html>
